@@ -32,6 +32,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 00647d02663ed9642bea8199e0d3b5a1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_9cd8c8bc1c8f4f3fabb3e93da045db87_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 00647d02663ed9642bea8199e0d3b5a1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_db9d3fe770244651b5ab2670482f4d08_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 00647d02663ed9642bea8199e0d3b5a1, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -54,15 +58,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Depth: 31.83
-    - _FlowSpeed: 1.36
+    - _Alpha: 0.5
+    - _Depth: -135.4
+    - _Edge: 52.21
+    - _FlowSpeed: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Speed: 0.13
+    - _Speed: 1
     m_Colors:
-    - _DeepColor: {r: 0.20754713, g: 0.5399175, b: 0.8301887, a: 0.5372549}
+    - _DeepColor: {r: 0.2520915, g: 0.7494488, b: 0.9716981, a: 1}
+    - _EdgeColor: {r: 1, g: 0, b: 0, a: 1}
     - _FlowDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _ShallowColor: {r: 0.03671235, g: 0.4905697, b: 0.5188679, a: 0.6745098}
+    - _ShallowColor: {r: 0, g: 0.7829423, b: 0.8301887, a: 0.69411767}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &9119883087575539809

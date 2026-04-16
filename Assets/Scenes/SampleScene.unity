@@ -5723,7 +5723,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
+  m_RequiresDepthTextureOption: 1
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
@@ -6213,8 +6213,8 @@ Transform:
   m_GameObject: {fileID: 817040192}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -129.8, y: -7.6, z: -98.5852}
-  m_LocalScale: {x: 16.415987, y: 1, z: 18.230595}
+  m_LocalPosition: {x: -132.6107, y: -7.6, z: -98.5852}
+  m_LocalScale: {x: 15.85456, y: 1, z: 18.230595}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -11662,7 +11662,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1382860882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11774,13 +11774,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1382860881}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15630819, y: 0.3123306, z: -0.08842276, w: 0.93284446}
-  m_LocalPosition: {x: -66.5, y: 45.8, z: -215.7}
+  m_LocalRotation: {x: 0.27616134, y: -0.055818304, z: -0.13007195, w: 0.9506316}
+  m_LocalPosition: {x: -118, y: 24, z: -104}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 20.295, y: 36.286, z: -4.117}
+  m_LocalEulerAnglesHint: {x: 30.699, y: -11.945, z: -18.872}
 --- !u!1 &1385878865
 GameObject:
   m_ObjectHideFlags: 0
