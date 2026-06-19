@@ -4,6 +4,7 @@ public class Tile : MonoBehaviour
 {
     public bool isGoTile;
     public float speed;
+    private Transform target;
 
     [HideInInspector] public float targetHitTime;
     [HideInInspector] public bool isSafeZone;
@@ -14,7 +15,7 @@ public class Tile : MonoBehaviour
     {
         rend = GetComponent<Renderer>();
     }
-    public void Initialize(float tileSpeed, bool goState, float expectedHitTime, Transform platformTransform)
+    public void Initialize(float tileSpeed, bool goState, float expectedHitTime, Transform platformTransform, Transform safeZoneTransform)
     {
         speed = tileSpeed;
         isGoTile = goState;
@@ -22,6 +23,7 @@ public class Tile : MonoBehaviour
         isSafeZone = false;
 
         transform.rotation = platformTransform.rotation;
+        target = safeZoneTransform;
 
         if (rend != null)
         {
@@ -30,8 +32,11 @@ public class Tile : MonoBehaviour
     }
     private void Update()
     {
-        transform.Translate(Vector3.back * speed * Time.deltaTime, Space.Self);
-        if(transform.position.z < -3.0f)
+        if (target == null)
+        
+            return;
+        transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+        if(Vector3.Distance(transform.position, target.position)<0.1f)
         {
             gameObject.SetActive(false);
         }

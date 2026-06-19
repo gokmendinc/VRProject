@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7923890885485953117}
   - component: {fileID: 4094304477314411626}
   - component: {fileID: 1421991062250573076}
-  - component: {fileID: 5044460499578032704}
+  - component: {fileID: 4771372219353762061}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Tile
@@ -132,7 +132,7 @@ MonoBehaviour:
   speed: 10
   targetHitTime: 0
   isSafeZone: 0
---- !u!54 &5044460499578032704
+--- !u!54 &4771372219353762061
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,7 +155,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0

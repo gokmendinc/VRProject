@@ -116,7 +116,7 @@ public class RhythmDataManager : MonoBehaviour
                 float distance = Vector3.Distance(spawnPoint.position, safeZoneCenter.position);
                 float expectedHitTime = Time.time + (distance / tileSpeed);
 
-                tileScript.Initialize(tileSpeed, isGo, expectedHitTime, platform);
+                tileScript.Initialize(tileSpeed, isGo, expectedHitTime, platform, safeZoneCenter);
                 activeTiles.Add(tileScript);
                 break;
             }
