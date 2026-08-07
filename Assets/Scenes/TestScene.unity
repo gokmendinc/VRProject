@@ -241,6 +241,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: frame1
       objectReference: {fileID: 0}
+    - target: {fileID: 7202271454713460447, guid: 3e00d2ae7cc014e988a1f23bded8c3b8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b38c3e931b2e96f4d83823c0b5c2b2e0, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -281,7 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldRotate
   headset: {fileID: 394572470}
-  distance: 2
+  distance: 10
 --- !u!4 &347487803
 Transform:
   m_ObjectHideFlags: 0
@@ -291,7 +295,7 @@ Transform:
   m_GameObject: {fileID: 347487801}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.78407, y: -1.85943, z: 4.53}
+  m_LocalPosition: {x: -4.78407, y: -1.85943, z: 8.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -467,6 +471,64 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &672315310
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 672315312}
+  - component: {fileID: 672315311}
+  m_Layer: 0
+  m_Name: Logger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &672315311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672315310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25eba53a9b13ac0469b2bb21617a880a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReactionLogger
+  participantId: P001
+  sessionId: S001
+  vrInteractionAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Vr Interaction
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 93f75a6e-3ffd-4e33-aa1f-485b09e7baa8
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+--- !u!4 &672315312
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672315310}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.50707, y: -0.64806, z: 8.99157}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &822662550
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,13 +638,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b92f366bd2fa7433c9042a01dfaf5e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TileSpawner
-  tilePrefab: {fileID: 1421991062250573076, guid: d63e8efb9c116f74d8ee7eb4e9a46d10, type: 3}
+  tilePrefab: {fileID: 1274474320160714411, guid: 1a3ea45eaeb491042b6c2e09c767d013, type: 3}
   portalTransform: {fileID: 1947181761}
   camera: {fileID: 394572469}
-  spawnInterval: 2
+  spawnInterval: 5
   tileSpeed: 5
   tileAmount: 2
-  spawnDistanceFromCamera: 10
+  spawnDistanceFromCamera: -1
+  spawnRadius: 2.81
+  minHeightOffset: 0
+  maxHeightOffset: 10
   viewportXBounds: {x: 0.1, y: 0.9}
   viewportYBounds: {x: 0.1, y: 0.9}
   goTileChance: 0.5
@@ -968,3 +1033,4 @@ SceneRoots:
   - {fileID: 2106471564}
   - {fileID: 347487803}
   - {fileID: 1144982701}
+  - {fileID: 672315312}

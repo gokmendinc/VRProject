@@ -5,13 +5,16 @@ public class TileSpawner : MonoBehaviour
     [Header("References")]
     [SerializeField] private Tile tilePrefab;
     [SerializeField] private Transform portalTransform;
-    [SerializeField] private Camera camera;
+    [SerializeField] private new Camera camera;
 
     [Header("Spawn Settings")]
     [SerializeField] private float spawnInterval = 2.0f;
     [SerializeField] private float tileSpeed= 5.0f;
     [SerializeField] private float tileAmount= 2.0f;
     [SerializeField] private float spawnDistanceFromCamera=10.0f;
+    [SerializeField] private float spawnRadius = 10.0f;
+    [SerializeField] private float minHeightOffset;
+    [SerializeField] private float maxHeightOffset;
 
     [Header("Viewport Spawn Offsets")]
     [Tooltip("Min/Max Screen Bounds(0 to 1)")]
@@ -45,9 +48,11 @@ public class TileSpawner : MonoBehaviour
             Debug.LogWarning("TileSpawner: Please assign all the variables in the inspector.");
             return;
         }
+        
         Vector3 spawnPosition = GetRandomSpawnPositionNearCamera();
 
         Tile newTile = Instantiate(tilePrefab, spawnPosition , Quaternion.identity);
+        ReactionLogger.Instance.RegisterTileSpawned(newTile, portalTransform);
         bool isGoState = Random.value < goTileChance;
 
         float distanceToPortal = Vector3.Distance(spawnPosition, portalTransform.position);
@@ -63,11 +68,40 @@ public class TileSpawner : MonoBehaviour
 
     private Vector3 GetRandomSpawnPositionNearCamera()
     {
-        float randomX = Random.Range(viewportXBounds.x, viewportXBounds.y);
-        float randomY = Random.Range(viewportYBounds.x, viewportYBounds.y);
+        Vector3 camForward = camera.transform.forward;
+        camForward.y = 0f;
+        camForward.Normalize();
 
-        Vector3 viewportPoint = new Vector3(randomX, randomY, spawnDistanceFromCamera);
-        
-        return camera.ViewportToWorldPoint(viewportPoint);
+        // Pick a random angle between -90 and +90f degrees relative to the backward
+        float randomAngle = Random.Range(-90f, 90f);
+
+        Vector3 backDirection = -camForward;
+        Vector3 spawnDirection = Quaternion.AngleAxis(randomAngle, Vector3.up) * backDirection;
+
+        Vector3 spawnPos = camera.transform.position + (spawnDirection * spawnRadius);
+        spawnPos.y += Random.Range(minHeightOffset, maxHeightOffset);
+        return spawnPos;
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (camera == null) camera = Camera.main;
+        if (camera == null) return;
+
+        Gizmos.color = Color.cyan;
+        Vector3 camPos = camera.transform.position;
+
+        // Projected horizontal backward direction
+        Vector3 camForward = camera.transform.forward;
+        camForward.y = 0f;
+        camForward.Normalize();
+        Vector3 backDir = -camForward;
+
+        // Draw the 180-degree arc bounds behind the camera
+        Vector3 leftBound = Quaternion.AngleAxis(-90, Vector3.up) * backDir * spawnRadius;
+        Vector3 rightBound = Quaternion.AngleAxis(90, Vector3.up) * backDir * spawnRadius;
+
+        Gizmos.DrawRay(camPos, leftBound);
+        Gizmos.DrawRay(camPos, rightBound);
+        Gizmos.DrawWireSphere(camPos, spawnRadius);
     }
 }

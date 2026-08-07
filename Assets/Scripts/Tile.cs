@@ -13,7 +13,7 @@ public class Tile : MonoBehaviour
 
     private void Awake()
     {
-        rend = GetComponent<Renderer>();
+        rend = GetComponentInChildren<Renderer>();
     }
     public void Initialize(float tileSpeed, bool goState, float expectedHitTime, Transform platformTransform, Transform safeZoneTransform)
     {
@@ -22,7 +22,7 @@ public class Tile : MonoBehaviour
         targetHitTime = expectedHitTime;
         isSafeZone = false;
 
-        transform.rotation = platformTransform.rotation;
+        FaceTarget();
         target = safeZoneTransform;
 
         if (rend != null)
@@ -30,15 +30,33 @@ public class Tile : MonoBehaviour
             rend.material.color = isGoTile ? Color.green : Color.red;
         }
     }
+    public void FaceTarget()
+    {
+        if (target == null) return;
+
+        Vector3 direction = target.position - transform.position;
+        if (direction != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = lookRotation * Quaternion.Euler(0f,90f,0f);
+        }
+    }
     private void Update()
     {
         if (target == null)
-        
             return;
         transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+        FaceTarget();
         if(Vector3.Distance(transform.position, target.position)<0.1f)
         {
-            gameObject.SetActive(false);
+            if (ReactionLogger.Instance != null)
+            {
+                ReactionLogger.Instance.OnTileReachedPortal(this);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }      
         }
     }
 }
