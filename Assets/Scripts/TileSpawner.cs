@@ -52,9 +52,8 @@ public class TileSpawner : MonoBehaviour
         Vector3 spawnPosition = GetRandomSpawnPositionNearCamera();
 
         Tile newTile = Instantiate(tilePrefab, spawnPosition , Quaternion.identity);
-        ReactionLogger.Instance.RegisterTileSpawned(newTile, portalTransform);
         bool isGoState = Random.value < goTileChance;
-
+       
         float distanceToPortal = Vector3.Distance(spawnPosition, portalTransform.position);
         float expectedHitTime = Time.time + (distanceToPortal/tileSpeed);
 
@@ -64,23 +63,24 @@ public class TileSpawner : MonoBehaviour
             expectedHitTime: expectedHitTime,
             platformTransform: portalTransform,
             safeZoneTransform: portalTransform);
+        ReactionLogger.Instance.RegisterTileSpawned(newTile, portalTransform);
     }
 
     private Vector3 GetRandomSpawnPositionNearCamera()
     {
-        Vector3 camForward = camera.transform.forward;
-        camForward.y = 0f;
-        camForward.Normalize();
+        float viewportX = Random.Range(viewportXBounds.x, viewportXBounds.y);
+        float viewportY = Random.Range(viewportYBounds.x, viewportYBounds.y);
 
-        // Pick a random angle between -90 and +90f degrees relative to the backward
-        float randomAngle = Random.Range(-90f, 90f);
+        Vector3 viewportPoint = new Vector3(
+            viewportX,
+            viewportY,
+            spawnDistanceFromCamera
+        );
+        Vector3 spawnPosition = camera.ViewportToWorldPoint(viewportPoint);
 
-        Vector3 backDirection = -camForward;
-        Vector3 spawnDirection = Quaternion.AngleAxis(randomAngle, Vector3.up) * backDirection;
-
-        Vector3 spawnPos = camera.transform.position + (spawnDirection * spawnRadius);
-        spawnPos.y += Random.Range(minHeightOffset, maxHeightOffset);
-        return spawnPos;
+        spawnPosition.y += Random.Range(minHeightOffset, maxHeightOffset);
+        return spawnPosition;
+            
     }
     private void OnDrawGizmosSelected()
     {

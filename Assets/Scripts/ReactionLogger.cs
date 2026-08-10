@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -35,14 +35,13 @@ public class ReactionLogger : MonoBehaviour
     private TrialData currentTrial;
     private bool trialInProgress = false;
     private int trialCounter = 0;
-    private bool isVr = false;
 
     private string filePath;
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-        filePath = Path.Combine(Application.persistentDataPath, $"GoNoGo_Data_{participantId}_{sessionId}_{DateTime.Now:yyyyMMdd_HHmmss}.csv");
+        filePath = Path.Combine(Application.persistentDataPath, $"GoNoGo_Data.csv");
     }
 
     private void OnEnable()
@@ -118,6 +117,10 @@ public class ReactionLogger : MonoBehaviour
     }
     public void RegisterTileSpawned(Tile tile, Transform portalTransform)
     {
+        Debug.Log(
+        $"REGISTER TILE → Name: {tile.gameObject.name} | " +
+        $"isGoTile: {tile.isGoTile}"
+        );
         trialCounter++;
         currentActiveTile = tile;
         trialInProgress = true;
@@ -136,6 +139,10 @@ public class ReactionLogger : MonoBehaviour
             spawnPos = tile.transform.position,
             portalPos = portalTransform.position
         };
+        Debug.Log(
+        $"TRIAL CREATED → Trial {currentTrial.trialID} | " +
+        $"Tile Type: {currentTrial.tileType}"
+        );
     }
 
     private void OnApplicationQuit()
