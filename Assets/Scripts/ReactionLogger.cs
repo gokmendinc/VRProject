@@ -61,7 +61,7 @@ public class ReactionLogger : MonoBehaviour
     private void Update()
     {
         bool inputPressed = ((vrInteractionAction != null && vrInteractionAction.action.WasPerformedThisFrame()) || Input.GetKeyDown(KeyCode.Space));
-
+        if(ino)
         if (trialInProgress && inputPressed) 
         {
             OnUserInteracted();
