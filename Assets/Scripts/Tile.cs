@@ -10,10 +10,12 @@ public class Tile : MonoBehaviour
     [HideInInspector] public bool isSafeZone;
 
     private Renderer rend;
+    private TrailRenderer trailRenderer;
 
     private void Awake()
     {
-        rend = GetComponentInChildren<Renderer>();
+        rend = GetComponentInChildren<SkinnedMeshRenderer>();
+        trailRenderer = GetComponent<TrailRenderer>();
     }
     public void Initialize(float tileSpeed, bool goState, float expectedHitTime, Transform platformTransform, Transform safeZoneTransform)
     {
@@ -28,6 +30,7 @@ public class Tile : MonoBehaviour
         if (rend != null)
         {
             rend.material.color = isGoTile ? Color.green : Color.red;
+            trailRenderer.material.SetColor("_EmissionColor", isGoTile ? Color.green : Color.red);
         }
     }
     public void FaceTarget()
