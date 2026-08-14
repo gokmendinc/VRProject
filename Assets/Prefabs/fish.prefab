@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 820fccc846e555544b8708bf88f1029c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.51
+      value: -6.357427
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 820fccc846e555544b8708bf88f1029c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.92
+      value: -7.726512
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 820fccc846e555544b8708bf88f1029c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 54.41
+      value: 11.444523
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 820fccc846e555544b8708bf88f1029c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -160,7 +160,7 @@ TrailRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -3
   m_MaskInteraction: 0
   m_Time: 2
   m_PreviewTimeScale: 1
@@ -171,8 +171,8 @@ TrailRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 0.044643402
+        time: 0.04347826
+        value: 0.058823526
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -180,8 +180,17 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.4507576
-        value: 0.1875
+        time: 0.44109878
+        value: 0.6794739
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.94444895
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0

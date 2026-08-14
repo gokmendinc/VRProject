@@ -15,7 +15,10 @@ public class ReactionLogger : MonoBehaviour
 
     [Header("Input Action (VR Controller)")]
     [SerializeField] private InputActionProperty vrInteractionAction;
+    private bool responseWindowActive = false;
+    private float responseStartTime = -1f;
 
+    [SerializeField] private float responseWindowDuration = 1.0f;
     public struct TrialData
     {
         public int trialID;
@@ -61,31 +64,63 @@ public class ReactionLogger : MonoBehaviour
     private void Update()
     {
         bool inputPressed = ((vrInteractionAction != null && vrInteractionAction.action.WasPerformedThisFrame()) || Input.GetKeyDown(KeyCode.Space));
-        if (trialInProgress && inputPressed) 
+        if (trialInProgress && inputPressed)
         {
             OnUserInteracted();
+        }
+        if (trialInProgress && responseWindowActive && Time.time - responseStartTime >= responseWindowDuration)
+        {
+            HandleNoResponse();
         }
 
     }
 
-    private void OnUserInteracted()
+    private void HandleNoResponse()
     {
-        if (!trialInProgress || currentActiveTile == null) return;
-
-        float hitTime = Time.time;
-        float rtSeconds = hitTime - currentTrial.spawnTime;
-        float rtMilliSeconds = rtSeconds * 1000f;
-
-        currentTrial.interactionTime = hitTime;
-        currentTrial.reactionTime= rtMilliSeconds;
+        if (currentActiveTile == null)
+            return;
 
         if (currentActiveTile.isGoTile)
         {
-            currentTrial.outcome = "Hit";
+            currentTrial.outcome = "OmissionError";
         }
         else
         {
-            currentTrial.outcome = "ComissionError";
+            currentTrial.outcome = "CorrectRejection";
+        }
+
+        currentTrial.interactionTime = -1f;
+        currentTrial.reactionTime = -1f;
+
+        EndTrial();
+    }
+
+    private void OnUserInteracted()
+    {
+        if (!trialInProgress ||
+            currentActiveTile == null)
+            return;
+
+        float interactionTime = Time.time;
+        currentTrial.interactionTime = interactionTime;
+        if (!responseWindowActive)
+        {
+            //button pressed before it reached center
+            currentTrial.reactionTime = (interactionTime - currentTrial.spawnTime) * 1000f;
+            currentTrial.outcome = "Premature Response";
+        }
+        else
+        {
+            // Button pressed after it reached the center
+            currentTrial.reactionTime = (interactionTime - responseStartTime) * 1000f;
+            if (currentActiveTile.isGoTile)
+            {
+                currentTrial.outcome = "Hit";
+            }
+            else
+            {
+                currentTrial.outcome = "CommissionError";
+            }
         }
         EndTrial();
     }
@@ -100,19 +135,21 @@ public class ReactionLogger : MonoBehaviour
             currentActiveTile.gameObject.SetActive(false);
         }
         Debug.Log($"[Trial {currentTrial.trialID}] Type: {currentTrial.tileType} | Outcome: {currentTrial.outcome} | RT: {currentTrial.reactionTime:F2} ms");
+        responseWindowActive = false;
     }
     public void OnTileReachedPortal(Tile tile)
     {
-        if (!trialInProgress || currentActiveTile != tile) return;
-        if (tile.isGoTile)
-        {
-            currentTrial.outcome = "OmissionError";
-        }
-        else
-        {
-            currentTrial.outcome = "CorrectRejection";
-        }
-        EndTrial();
+        if (!trialInProgress || currentActiveTile != tile)
+            return;
+
+        responseWindowActive = true;
+        responseStartTime = Time.time;
+
+        Debug.Log(
+            $"[Trial {currentTrial.trialID}] " +
+            $"Tile reached response zone. " +
+            $"Waiting for response."
+        );
     }
     public void RegisterTileSpawned(Tile tile, Transform portalTransform)
     {

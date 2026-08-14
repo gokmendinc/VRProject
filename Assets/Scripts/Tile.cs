@@ -11,6 +11,9 @@ public class Tile : MonoBehaviour
 
     private Renderer rend;
     private TrailRenderer trailRenderer;
+    [SerializeField] private float responseRadius = 0.1f;
+
+    private bool reachedPortal = false;
 
     private void Awake()
     {
@@ -50,16 +53,13 @@ public class Tile : MonoBehaviour
             return;
         transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
         FaceTarget();
-        if(Vector3.Distance(transform.position, target.position)<0.1f)
+        if(Vector3.Distance(transform.position, target.position)<=responseRadius)
         {
             if (ReactionLogger.Instance != null)
             {
+                reachedPortal = true;
                 ReactionLogger.Instance.OnTileReachedPortal(this);
-            }
-            else
-            {
-                gameObject.SetActive(false);
-            }      
+            }   
         }
     }
 }

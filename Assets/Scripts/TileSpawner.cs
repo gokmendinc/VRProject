@@ -12,14 +12,18 @@ public class TileSpawner : MonoBehaviour
     [SerializeField] private float tileSpeed= 5.0f;
     [SerializeField] private float tileAmount= 2.0f;
     [SerializeField] private float spawnDistanceFromCamera=10.0f;
-    [SerializeField] private float spawnRadius = 10.0f;
     [SerializeField] private float minHeightOffset;
     [SerializeField] private float maxHeightOffset;
 
     [Header("Viewport Spawn Offsets")]
     [Tooltip("Min/Max Screen Bounds(0 to 1)")]
-    [SerializeField] private Vector2 viewportXBounds = new Vector2(0.1f, 0.9f);
-    [SerializeField] private Vector2 viewportYBounds = new Vector2(0.1f, 0.9f);
+    [Header("Corner Spawn Settings")]
+    [SerializeField] private float minHorizontalDistance = 14f;
+    [SerializeField] private float maxHorizontalDistance = 20f;
+
+    [SerializeField] private float minVerticalDistance = 8f;
+    [SerializeField] private float maxVerticalDistance = 13f;
+
 
     [Header("Tile Properties")]
     [SerializeField] [Range(0f,1f)] private float goTileChance = 0.5f;
@@ -49,7 +53,7 @@ public class TileSpawner : MonoBehaviour
             return;
         }
         
-        Vector3 spawnPosition = GetRandomSpawnPositionNearCamera();
+        Vector3 spawnPosition = GetRandomSpawnPosition();
 
         Tile newTile = Instantiate(tilePrefab, spawnPosition , Quaternion.identity);
         bool isGoState = Random.value < goTileChance;
@@ -66,42 +70,55 @@ public class TileSpawner : MonoBehaviour
         ReactionLogger.Instance.RegisterTileSpawned(newTile, portalTransform);
     }
 
-    private Vector3 GetRandomSpawnPositionNearCamera()
+    private Vector3 GetRandomSpawnPosition()
     {
-        float viewportX = Random.Range(viewportXBounds.x, viewportXBounds.y);
-        float viewportY = Random.Range(viewportYBounds.x, viewportYBounds.y);
+        // 0 = Top Left
+        // 1 = Top Right
+        // 2 = Bottom Left
+        // 3 = Bottom Right
+        int spawnCorner = Random.Range(0, 4);
 
-        Vector3 viewportPoint = new Vector3(
-            viewportX,
-            viewportY,
-            spawnDistanceFromCamera
+        Vector3 portalPosition = portalTransform.position;
+
+        Vector3 right = camera.transform.right;
+        Vector3 up = camera.transform.up;
+
+        float horizontalDistance = Random.Range(
+            minHorizontalDistance,
+            maxHorizontalDistance
         );
-        Vector3 spawnPosition = camera.ViewportToWorldPoint(viewportPoint);
 
-        spawnPosition.y += Random.Range(minHeightOffset, maxHeightOffset);
+        float verticalDistance = Random.Range(
+            minVerticalDistance,
+            maxVerticalDistance
+        );
+
+        Vector3 spawnPosition = portalPosition - new Vector3(0,0,1);
+
+        switch (spawnCorner)
+        {
+            case 0: // TOP LEFT
+                spawnPosition += -right * horizontalDistance;
+                spawnPosition += up * verticalDistance;
+                break;
+
+            case 1: // TOP RIGHT
+                spawnPosition += right * horizontalDistance;
+                spawnPosition += up * verticalDistance;
+                break;
+
+            case 2: // BOTTOM LEFT
+                spawnPosition += -right * horizontalDistance;
+                spawnPosition += -up * verticalDistance;
+                break;
+
+            case 3: // BOTTOM RIGHT
+                spawnPosition += right * horizontalDistance;
+                spawnPosition += -up * verticalDistance;
+                break;
+        }
+
         return spawnPosition;
-            
     }
-    private void OnDrawGizmosSelected()
-    {
-        if (camera == null) camera = Camera.main;
-        if (camera == null) return;
-
-        Gizmos.color = Color.cyan;
-        Vector3 camPos = camera.transform.position;
-
-        // Projected horizontal backward direction
-        Vector3 camForward = camera.transform.forward;
-        camForward.y = 0f;
-        camForward.Normalize();
-        Vector3 backDir = -camForward;
-
-        // Draw the 180-degree arc bounds behind the camera
-        Vector3 leftBound = Quaternion.AngleAxis(-90, Vector3.up) * backDir * spawnRadius;
-        Vector3 rightBound = Quaternion.AngleAxis(90, Vector3.up) * backDir * spawnRadius;
-
-        Gizmos.DrawRay(camPos, leftBound);
-        Gizmos.DrawRay(camPos, rightBound);
-        Gizmos.DrawWireSphere(camPos, spawnRadius);
-    }
+    
 }
