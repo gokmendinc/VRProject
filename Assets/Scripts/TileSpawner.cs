@@ -11,7 +11,6 @@ public class TileSpawner : MonoBehaviour
     [SerializeField] private float spawnInterval = 2.0f;
     [SerializeField] private float tileSpeed= 5.0f;
     [SerializeField] private float tileAmount= 2.0f;
-    [SerializeField] private float spawnDistanceFromCamera=10.0f;
     [SerializeField] private float minHeightOffset;
     [SerializeField] private float maxHeightOffset;
 

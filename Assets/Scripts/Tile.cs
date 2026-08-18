@@ -55,9 +55,9 @@ public class Tile : MonoBehaviour
         FaceTarget();
         if(Vector3.Distance(transform.position, target.position)<=responseRadius)
         {
+            reachedPortal = true;
             if (ReactionLogger.Instance != null)
             {
-                reachedPortal = true;
                 ReactionLogger.Instance.OnTileReachedPortal(this);
             }   
         }

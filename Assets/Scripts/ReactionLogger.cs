@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -18,7 +19,14 @@ public class ReactionLogger : MonoBehaviour
     private bool responseWindowActive = false;
     private float responseStartTime = -1f;
 
-    [SerializeField] private float responseWindowDuration = 1.0f;
+    [Header("Sound Effects")]
+    [SerializeField] AudioClip SuccesClip;
+    [SerializeField] AudioClip FailClip;
+
+
+    [SerializeField] private float responseWindowDuration = 0.3f;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private Renderer portalColor;
     public struct TrialData
     {
         public int trialID;
@@ -68,11 +76,6 @@ public class ReactionLogger : MonoBehaviour
         {
             OnUserInteracted();
         }
-        if (trialInProgress && responseWindowActive && Time.time - responseStartTime >= responseWindowDuration)
-        {
-            HandleNoResponse();
-        }
-
     }
 
     private void HandleNoResponse()
@@ -91,7 +94,7 @@ public class ReactionLogger : MonoBehaviour
 
         currentTrial.interactionTime = -1f;
         currentTrial.reactionTime = -1f;
-
+        Debug.Log("Handling no response...");
         EndTrial();
     }
 
@@ -108,6 +111,7 @@ public class ReactionLogger : MonoBehaviour
             //button pressed before it reached center
             currentTrial.reactionTime = (interactionTime - currentTrial.spawnTime) * 1000f;
             currentTrial.outcome = "Premature Response";
+            audioSource.PlayOneShot(FailClip);
         }
         else
         {
@@ -116,10 +120,12 @@ public class ReactionLogger : MonoBehaviour
             if (currentActiveTile.isGoTile)
             {
                 currentTrial.outcome = "Hit";
+                audioSource.PlayOneShot(SuccesClip);
             }
             else
             {
                 currentTrial.outcome = "CommissionError";
+                audioSource.PlayOneShot(FailClip);
             }
         }
         EndTrial();
@@ -127,21 +133,27 @@ public class ReactionLogger : MonoBehaviour
 
     private void EndTrial()
     {
+        Tile tileToDisable = currentActiveTile;
         trialInProgress = false;
+        responseWindowActive = false;
+        responseStartTime = -1f;
         trialLogs.Add(currentTrial);
 
-        if (currentActiveTile != null)
+        if (tileToDisable != null)
         {
-            currentActiveTile.gameObject.SetActive(false);
+            tileToDisable.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("There is no tile to disable.");
         }
         Debug.Log($"[Trial {currentTrial.trialID}] Type: {currentTrial.tileType} | Outcome: {currentTrial.outcome} | RT: {currentTrial.reactionTime:F2} ms");
-        responseWindowActive = false;
+        currentActiveTile = null;
     }
     public void OnTileReachedPortal(Tile tile)
     {
         if (!trialInProgress || currentActiveTile != tile)
             return;
-
         responseWindowActive = true;
         responseStartTime = Time.time;
 
@@ -150,6 +162,24 @@ public class ReactionLogger : MonoBehaviour
             $"Tile reached response zone. " +
             $"Waiting for response."
         );
+        StartCoroutine(ResponseWindowCoroutine());
+    }
+    private IEnumerator ResponseWindowCoroutine()
+    {
+        portalColor.material.color = Color.green;
+        yield return new WaitForSeconds(responseWindowDuration);
+        portalColor.material.color = Color.white;
+        if(!trialInProgress)
+        {
+            yield break;
+        }
+
+        if (!responseWindowActive)
+        {
+            yield break;
+        }
+        Debug.Log("--- NO RESPONSE ---");
+        HandleNoResponse();
     }
     public void RegisterTileSpawned(Tile tile, Transform portalTransform)
     {
@@ -184,7 +214,6 @@ public class ReactionLogger : MonoBehaviour
     private void OnApplicationQuit()
     {
         SaveDataToCSV();
-
     }
 
     private void SaveDataToCSV()
